@@ -14,22 +14,159 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
+const employees = [];
+
 const empQuestions = [
-    "What is your Full Name?",
-    "What is your Email address?"
+    "What is the employee's Full Name?",
+    "What is the employee's ID Number?",
+    "What is the employee's Email Address?"
 ];
 
-const mngrQuestions = [
-    "What is your managers phone number?",
-];
+// const mngrQuestions = [
+//    "What is the interns phone number?"
+// ];
 
-const internQuestions = [
-    "What School/College do you attend?"
-];
+//const internQuestions = [
+//    "What School/College does the intern attend?"
+// ];
 
-const engQuestions = [
-    "What is your GitHub username?"
-];
+// const engQuestions = [
+//    "What is the engineer's GitHub username?"
+//];
+
+function managPrompt() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: empQuestions[0]
+        },
+        {
+            type: "input",
+            name: "id",
+            message: empQuestions[1]
+        },
+        {
+            type: "input",
+            name: "email",
+            message: empQuestions[2]
+        },
+        {
+            type: "input",
+            name: "office",
+            message: "What is your Manager's phone number?"
+        },
+    ]).then(function (data) {
+        const manager = new Manager(data.name, data.id, data.email, data.office);
+        console.log(data);
+        employees.push(manager);
+        console.log(employees);
+        empType();
+    });
+};
+
+function internPrompt() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: empQuestions[0]
+        },
+        {
+            type: "input",
+            name: "id",
+            message: empQuestions[1]
+        },
+        {
+            type: "input",
+            name: "email",
+            message: empQuestions[2]
+        },
+        {
+            type: "input",
+            name: "school",
+            message: "What School/College does the intern attend?"
+        },
+    ]).then(function (data) {
+        const intern = new Intern(data.name, data.id, data.email, data.school);
+        employees.push(intern);
+        console.log(employees);
+    empType();
+});
+};
+
+function engPrompt() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: empQuestions[0]
+        },
+        {
+            type: "input",
+            name: "id",
+            message: empQuestions[1]
+        },
+        {
+            type: "input",
+            name: "email",
+            message: empQuestions[2]
+        },
+        {
+            type: "input",
+            name: "github",
+            message: "What is the engineer's GitHub username?"
+        },
+    ]).then(function (data) {
+        const engineer = new Engineer(data.name, data.id, data.email, data.github);
+        employees.push(engineer);
+        console.log(employees);
+    empType();
+});
+};
+
+function empType() {
+    return inquirer.prompt([
+        {
+            type: "list",
+            name: "empType",
+            message: "Would you like to create another employee? (select type)",
+            choices: [
+                "Intern",
+                "Engineer",
+                "Finish",
+                new inquirer.Separator()
+            ]
+        },
+
+    ]).then(function (data) {
+        if (data.empType === "Intern") {
+            internPrompt();
+        } else if (data.empType === "Engineer") {
+            engPrompt();
+        } else { //Finish
+            renderTeam();
+    return;
+}
+    })
+};
+
+function teamInit() {
+    console.log("Welcome to the Node CLI team builder App.  Answer the prompts and when you're done select finish to see the end result")
+    managPrompt();
+};
+
+async function renderTeam () {
+    const htmlRender = await render(employees);
+    fs.writeFile(outputPath, htmlRender, function(err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("team.html Created with user input")
+    });
+};
+
+teamInit();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
