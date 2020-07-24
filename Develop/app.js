@@ -20,6 +20,14 @@ const empQuestions = [
 
 // VALIDATION FUNCTIONS:
 
+const validName = async (input) => {
+    if (!/[1-9`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi.test(input)) {
+        return true;
+    } else {
+        console.log("\n" + "incorrect input, numbers and characters can't be included in the name")
+    }
+}
+
 const validId = async (input) => {
     if (input > 0) {
         return true;
@@ -37,10 +45,10 @@ const validOffice = async (input) => {
 }
 
 const validEmail = async (input) => {
-    if (input.includes("@")) {
+    if (input.includes("@") && input.includes(".com")) {
         return true;
     } else {
-        console.log("\n" + "incorrect input, email needs to contain the @ symbol");
+        console.log("\n" + "incorrect input, email needs to contain the '@' symbol & '.com'");
     }
 }
 
@@ -55,12 +63,12 @@ const validGithub = async (input) => {
 // INQUIRER PROMPT FUNCTIONS
 
 function managPrompt() {
-    let role = "Manager"
     return inquirer.prompt([
         {
             type: "input",
             name: "name",
-            message: empQuestions[0]
+            message: empQuestions[0],
+            validate: validName  
         },
         {
             type: "input",
