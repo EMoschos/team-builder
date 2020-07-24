@@ -10,10 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
 const employees = [];
 
 const empQuestions = [
@@ -22,19 +18,44 @@ const empQuestions = [
     "What is the employee's Email Address?"
 ];
 
-// const mngrQuestions = [
-//    "What is the interns phone number?"
-// ];
+// VALIDATION FUNCTIONS:
 
-//const internQuestions = [
-//    "What School/College does the intern attend?"
-// ];
+const validId = async (input) => {
+    if (input > 0) {
+        return true;
+    } else {
+        console.log("\n" + "incorrect input, needs to be a number greater than 0")
+    }
+}
 
-// const engQuestions = [
-//    "What is the engineer's GitHub username?"
-//];
+const validOffice = async (input) => {
+    if (input.length === 8 && input > 9999999) {
+        return true;
+    } else {
+        console.log("\n" + "incorrect input, needs to be a 8 numbers long");
+    }
+}
+
+const validEmail = async (input) => {
+    if (input.includes("@")) {
+        return true;
+    } else {
+        console.log("\n" + "incorrect input, email needs to contain the @ symbol");
+    }
+}
+
+const validGithub = async (input) => {
+    if (!input.includes(" ")) {
+        return true;
+    } else {
+        console.log("\n" + "incorrect input, GitHub username cannot have spaces");
+    }
+}
+
+// INQUIRER PROMPT FUNCTIONS
 
 function managPrompt() {
+    let role = "Manager"
     return inquirer.prompt([
         {
             type: "input",
@@ -44,17 +65,20 @@ function managPrompt() {
         {
             type: "input",
             name: "id",
-            message: empQuestions[1]
+            message: empQuestions[1],
+            validate: validId
         },
         {
             type: "input",
             name: "email",
-            message: empQuestions[2]
+            message: empQuestions[2],
+            validate: validEmail
         },
         {
             type: "input",
             name: "office",
-            message: "What is your Manager's phone number?"
+            message: "What is the Manager's office number?",
+            validate: validOffice
         },
     ]).then(function (data) {
         const manager = new Manager(data.name, data.id, data.email, data.office);
@@ -75,12 +99,14 @@ function internPrompt() {
         {
             type: "input",
             name: "id",
-            message: empQuestions[1]
+            message: empQuestions[1],
+            validate: validId
         },
         {
             type: "input",
             name: "email",
-            message: empQuestions[2]
+            message: empQuestions[2],
+            validate: validEmail
         },
         {
             type: "input",
@@ -105,17 +131,20 @@ function engPrompt() {
         {
             type: "input",
             name: "id",
-            message: empQuestions[1]
+            message: empQuestions[1],
+            validate: validId
         },
         {
             type: "input",
             name: "email",
-            message: empQuestions[2]
+            message: empQuestions[2],
+            validate: validEmail
         },
         {
             type: "input",
             name: "github",
-            message: "What is the engineer's GitHub username?"
+            message: "What is the engineer's GitHub username?",
+            validate: validGithub
         },
     ]).then(function (data) {
         const engineer = new Engineer(data.name, data.id, data.email, data.github);
@@ -124,6 +153,8 @@ function engPrompt() {
     empType();
 });
 };
+
+// FUNCTION TO CONTINUE THE LOOP AND ALSO FINISH THE INPUT OF EMPLOYEES
 
 function empType() {
     return inquirer.prompt([
@@ -151,10 +182,14 @@ function empType() {
     })
 };
 
+//FUNCTION TO INTIALISE AND START THE CLI APP
+
 function teamInit() {
     console.log("Welcome to the Node CLI team builder App.  Answer the prompts and when you're done select finish to see the end result")
     managPrompt();
 };
+
+// FUNCTION TO RENDER THE INPUTTED TEAM TO A HTML FILE
 
 async function renderTeam () {
     const htmlRender = await render(employees);
@@ -167,23 +202,3 @@ async function renderTeam () {
 };
 
 teamInit();
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
