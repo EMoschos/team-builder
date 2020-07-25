@@ -102,7 +102,8 @@ function internPrompt() {
         {
             type: "input",
             name: "name",
-            message: empQuestions[0]
+            message: empQuestions[0],
+            validate: validName 
         },
         {
             type: "input",
@@ -134,7 +135,8 @@ function engPrompt() {
         {
             type: "input",
             name: "name",
-            message: empQuestions[0]
+            message: empQuestions[0],
+            validate: validName 
         },
         {
             type: "input",
