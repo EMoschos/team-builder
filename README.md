@@ -39,7 +39,7 @@
   For detailed run through video on using the team builder app [Click Here](https://drive.google.com/file/d/1CYhvIgTKvcQhhVvUeIiNwI5zXYUIe1ly/view)
 
   ![Team Builer in Action](./Assets/tbapp.PNG)
-  ![Team Builer Rendered HTML](./Assets/tbHTML.PNG)
+  ![Team Builer Rendered HTML](./Assets/tb_HTML.PNG)
 
   ## License 
   
